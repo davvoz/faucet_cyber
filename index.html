@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CellCoin Faucet Deluxe - Web3 Gaming Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --background-color: #0a0a2a;
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        #gameContainer {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.2);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color);
+            }
+
+            to {
+                text-shadow: 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color);
+            }
+        }
+
+        #status {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .status-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        #cell {
+            width: 200px;
+            height: 200px;
+            margin: 2rem auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            filter: blur(10px);
+            opacity: 0.7;
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        #cell::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: radial-gradient(circle, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .btn {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--background-color);
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover::before {
+            left: -100%;
+            top: -100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #claimArea {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        input {
+            font-family: 'Roboto', sans-serif;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            color: var(--text-color);
+            width: calc(100% - 1.6rem);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #levelUpModal,
+        #achievementModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--background-color);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+            animation: modalAppear 0.5s ease-out;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #powerUps {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+
+        .power-up {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .power-up:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        #devModeSwitch {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        #achievements {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .achievement {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 10px;
+            margin: 0.5rem;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .achievement.unlocked {
+            opacity: 1;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--background-color);
+            animation: achievementUnlock 0.5s ease-out;
+        }
+
+        @keyframes achievementUnlock {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .achievement.unlocked::before {
+            content: '🏆';
+            margin-right: 0.5rem;
+        }
+
+        .achievement.unlocked:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        #clickFrenzyIndicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--secondary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #soundToggle {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        #enableSound {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="devModeSwitch">
+        Dev Mode
+        <label class="switch">
+            <input type="checkbox" id="devModeToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <canvas id="particles"></canvas>
+    <div id="gameContainer">
+        <h1>CellCoin Faucet Deluxe</h1>
+        <div id="status">
+            <div class="status-item">Livello: <span id="levelDisplay">1</span></div>
+            <div class="status-item">CellCoin: <span id="cellcoinDisplay">0</span> CC</div>
+            <div class="status-item">Energia: <span id="energyDisplay">100</span>%</div>
+            <div class="status-item">Moltiplicatore: x<span id="multiplierDisplay">1</span></div>
+        </div>
+        <div id="cell"></div>
+        <button id="mineBtn" class="btn">Mina CellCoin</button>
+        <button id="evolveBtn" class="btn" disabled>Evolvi (Costo: <span id="evolveCost">10</span> CC)</button>
+        <div id="claimArea">
+            <input type="text" id="walletAddress" placeholder="Inserisci il tuo indirizzo wallet">
+            <button id="claimBtn" class="btn" disabled>Richiedi CellCoin</button>
+        </div>
+        <div id="achievements"></div>
+    </div>
+
+    <div id="levelUpModal">
+        <div class="modal-content">
+            <h2>Livello Aumentato!</h2>
+            <p>Scegli un potenziamento:</p>
+            <div id="powerUps">
+                <div class="power-up" data-type="miningRate">
+                    <h3>Velocità di Mining +50%</h3>
+                    <p>Aumenta la velocità di produzione di CellCoin</p>
+                </div>
+                <div class="power-up" data-type="energyRegen">
+                    <h3>Rigenerazione Energia +25%</h3>
+                    <p>Recupera energia più velocemente</p>
+                </div>
+                <div class="power-up" data-type="bonusCoins">
+                    <h3>Bonus CellCoin +100</h3>
+                    <p>Ottieni immediatamente 100 CellCoin extra</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="achievementModal">
+        <div class="modal-content">
+            <h2>Nuovo Traguardo Sbloccato!</h2>
+            <p id="achievementDescription"></p>
+        </div>
+    </div>
+
+    <div id="clickFrenzyIndicator">CLICK FRENZY!</div>
+
+    <script>
+        let level = 1;
+        let cellcoin = 0;
+        let energy = 100;
+        let miningRate = 0.1;
+        let evolutionCost = 10;
+        let claimThreshold = 50;
+        let energyRegenRate = 1;
+        let devMode = false;
+        let multiplier = 1;
+        let clickCount = 0;
+
+        const cellElem = document.getElementById('cell');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const cellcoinDisplay = document.getElementById('cellcoinDisplay');
+        const energyDisplay = document.getElementById('energyDisplay');
+        const multiplierDisplay = document.getElementById('multiplierDisplay');
+        const mineBtn = document.getElementById('mineBtn');
+        const evolveBtn = document.getElementById('evolveBtn');
+        const claimBtn = document.getElementById('claimBtn');
+        const walletInput = document.getElementById('walletAddress');
+        const evolveCostDisplay = document.getElementById('evolveCost');
+        const levelUpModal = document.getElementById('levelUpModal');
+        const achievementModal = document.getElementById('achievementModal');
+        const achievementDescription = document.getElementById('achievementDescription');
+        const devModeToggle = document.getElementById('devModeToggle');
+        const achievementsContainer = document.getElementById('achievements');
+
+        const achievements = [
+            { id: 'firstMine', name: 'Prima Estrazione', description: 'Hai estratto il tuo primo CellCoin!', condition: () => clickCount >= 1 },
+            { id: 'level5', name: 'Livello 5', description: 'Hai raggiunto il livello 5!', condition: () => level >= 5 },
+            { id: 'level10', name: 'Livello 10', description: 'Hai raggiunto il livello 10!', condition: () => level >= 10 },
+            { id: '1000CC', name: 'Milionario', description: 'Hai accumulato 1000 CellCoin!', condition: () => cellcoin >= 1000 },
+            { id: 'click100', name: 'Cliccatore Seriale', description: 'Hai cliccato 100 volte!', condition: () => clickCount >= 100 },
+        ];
+
+        const mineSound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
+        const evolveSound = new Audio('350868__cabled_mess__coin_c_05.wav');
+        const achievementSound = new Audio('350873__cabled_mess__coin_c_02.wav');
+        const clickFrenzySound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
+
+
+        achievements.forEach(achievement => {
+            const achievementElem = document.createElement('div');
+            achievementElem.classList.add('achievement');
+            achievementElem.id = achievement.id;
+            achievementElem.textContent = achievement.name;
+            achievementsContainer.appendChild(achievementElem);
+        });
+
+        function updateStatus() {
+            levelDisplay.textContent = level;
+            cellcoinDisplay.textContent = cellcoin.toFixed(1);
+            energyDisplay.textContent = energy;
+            multiplierDisplay.textContent = multiplier.toFixed(1);
+            evolveBtn.disabled = cellcoin < evolutionCost && !devMode;
+            claimBtn.disabled = (cellcoin < claimThreshold || !walletInput.value) && !devMode;
+            evolveCostDisplay.textContent = evolutionCost;
+        }
+
+
+
+        let soundEnabled = true;
+
+        // Modifica la funzione playSound per controllare se il suono è abilitato
+        function playSound(sound) {
+            if (soundEnabled) {
+                sound.currentTime = 0;
+                sound.play();
+            }
+        }
+
+        // Modifica la funzione mine() per includere il suono
+        function mine() {
+            if (energy > 0 || devMode) {
+                const mined = miningRate * multiplier * (devMode ? 10 : 1);
+                cellcoin += mined;
+                energy = devMode ? 100 : Math.max(0, energy - 5);
+                clickCount++;
+                updateStatus();
+                cellElem.style.transform = 'scale(1.1)';
+                setTimeout(() => cellElem.style.transform = 'scale(1)', 100);
+                createParticles();
+                checkAchievements();
+                playSound(mineSound);  // Aggiungi questa linea
+            }
+        }
+
+        // Modifica la funzione evolve() per includere il suono
+        function evolve() {
+            if (cellcoin >= evolutionCost || devMode) {
+                level++;
+                cellcoin -= devMode ? 0 : evolutionCost;
+                evolutionCost = Math.floor(evolutionCost * 1.5);
+                cellElem.style.transform = `scale(${1 + level * 0.1})`;
+                updateStatus();
+                showLevelUpModal();
+                checkAchievements();
+                playSound(evolveSound);  // Aggiungi questa linea
+            }
+        }
+
+        function claim() {
+            if (cellcoin >= claimThreshold && walletInput.value || devMode) {
+                alert(`Hai richiesto con successo ${cellcoin.toFixed(1)} CC all'indirizzo ${walletInput.value || 'Dev Address'}`);
+                cellcoin = devMode ? cellcoin : 0;
+                updateStatus();
+            }
+        }
+
+        function showLevelUpModal() {
+            levelUpModal.style.display = 'flex';
+        }
+
+        function showAchievementModal(achievement) {
+            achievementDescription.textContent = achievement.description;
+            achievementModal.style.display = 'flex';
+            playSound(achievementSound);  // Aggiungi questa linea
+            setTimeout(() => {
+                achievementModal.style.display = 'none';
+            }, 3000);
+        }
+        function checkAchievements() {
+            achievements.forEach(achievement => {
+                if (achievement.condition() && !document.getElementById(achievement.id).classList.contains('unlocked')) {
+                    document.getElementById(achievement.id).classList.add('unlocked');
+                    showAchievementModal(achievement);
+                }
+            });
+        }
+
+        document.querySelectorAll('.power-up').forEach(powerUp => {
+            powerUp.addEventListener('click', () => {
+                const type = powerUp.getAttribute('data-type');
+                switch (type) {
+                    case 'miningRate':
+                        miningRate *= 1.5;
+                        break;
+                    case 'energyRegen':
+                        energyRegenRate *= 1.25;
+                        break;
+                    case 'bonusCoins':
+                        cellcoin += 100;
+                        break;
+                }
+                levelUpModal.style.display = 'none';
+                updateStatus();
+            });
+        });
+
+        setInterval(() => {
+            energy = Math.min(100, energy + energyRegenRate);
+            updateStatus();
+        }, 1000);
+
+        mineBtn.addEventListener('click', mine);
+        evolveBtn.addEventListener('click', evolve);
+        claimBtn.addEventListener('click', claim);
+        cellElem.addEventListener('click', mine);
+        walletInput.addEventListener('input', updateStatus);
+
+        devModeToggle.addEventListener('change', function () {
+            devMode = this.checked;
+            updateStatus();
+        });
+
+        // Particle system
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = Math.random() < 0.5 ? '#00ffff' : '#ff00ff';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.size > 0.2) this.size -= 0.1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        let particleArray = [];
+
+        function createParticles() {
+            const rect = cellElem.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            for (let i = 0; i < 10; i++) {
+                particleArray.push(new Particle(x, y));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particleArray.length; i++) {
+                particleArray[i].update();
+                particleArray[i].draw();
+                if (particleArray[i].size <= 0.2) {
+                    particleArray.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Bonus feature: Clicking frenzy
+        let clickFrenzyActive = false;
+        setInterval(() => {
+            if (Math.random() < 0.1 && !clickFrenzyActive) {  // 10% chance every 10 seconds
+                clickFrenzyActive = true;
+                multiplier *= 2;
+                updateStatus();
+                playSound(clickFrenzySound);  // Aggiungi questa linea
+                setTimeout(() => {
+                    clickFrenzyActive = false;
+                    multiplier /= 2;
+                    updateStatus();
+                }, 10000);  // Lasts for 10 seconds
+            }
+        }, 10000);
+
+        animateParticles();
+        updateStatus();
+        checkAchievements();
+    </script>
+</body>
+
+</html>
