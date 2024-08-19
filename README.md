@@ -59,10 +59,6 @@ Usa questa modalità per testare e bilanciare il gioco.
 
 Siamo aperti a contributi! Se hai idee per migliorare il gioco o aggiungere nuove funzionalità, sentiti libero di aprire una pull request o segnalare un problema.
 
-## Licenza
-
-Questo progetto è rilasciato sotto la licenza MIT. Vedi il file `LICENSE` per maggiori dettagli.
-
 ## Contatti
 
 Per domande o feedback, contattaci a: [inserisci qui la tua email o il tuo profilo GitHub]
