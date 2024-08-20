@@ -811,6 +811,45 @@
         animateParticles();
         updateStatus();
         checkAchievements();
+
+        // Attendi che il documento sia pronto
+        if(window.Telegram){
+            document.addEventListener('DOMContentLoaded', function () {
+            // Assicurati che Telegram WebApp sia disponibile
+            if (window.Telegram.WebApp) {
+                const user = window.Telegram.WebApp.initDataUnsafe.user;
+
+                if (user) {
+                    const userId = user.id;
+                    console.log(`User ID: ${userId}`);
+                    alert(`Il tuo ID Telegram è: ${userId}`);
+
+                    // Puoi anche inviare questo ID al server o usarlo come necessario nella tua web app
+                    // Esempio di invio al server:
+                    /*
+                    fetch('/save_user_id', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ userId: userId })
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log('Success:', data))
+                    .catch(error => console.error('Error:', error));
+                    */
+                } else {
+                    alert('Nessuna informazione utente disponibile.');
+                }
+            } else {
+                alert('Telegram WebApp non è disponibile.');
+            }
+        });        } else {
+            console.log('Telegram WebApp non è disponibile');
+        }
+       
+
+
     </script>
 </body>
 
