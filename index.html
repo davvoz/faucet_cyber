@@ -45,7 +45,9 @@
             margin-bottom: 1rem;
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text; /* Add the standard property */
             animation: glow 2s ease-in-out infinite alternate;
         }
 
@@ -252,7 +254,7 @@
             font-size: 2rem;
             margin-bottom: 1rem;
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -813,7 +815,7 @@
         checkAchievements();
 
         // Attendi che il documento sia pronto
-        if(window.Telegram){
+        
             document.addEventListener('DOMContentLoaded', function () {
             // Assicurati che Telegram WebApp sia disponibile
             if (window.Telegram.WebApp) {
@@ -844,9 +846,7 @@
             } else {
                 alert('Telegram WebApp non è disponibile.');
             }
-        });        } else {
-            console.log('Telegram WebApp non è disponibile');
-        }
+        });
        
 
 
