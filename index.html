@@ -49,7 +49,8 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text; /* Add the standard property */
+            background-clip: text;
+            /* Add the standard property */
             animation: glow 2s ease-in-out infinite alternate;
         }
 
@@ -623,17 +624,16 @@
         const clickFrenzySound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
         const user = window.Telegram.WebApp.initDataUnsafe.user;
         document.getElementById('inviaMessaggio').addEventListener('click', function () {
-            //inviamo un messaggio alla chat
-            window.Telegram.WebApp.sendAction({
-                action: 'openChat',
-                params: {
-                    chat_id: '1234567890',
-                    text: 'Ciao, come stai?'
-                }
+            // Prepare the data to send to your bot
+            const messageData = JSON.stringify({
+                chat_id: '1234567890',
+                text: 'Ciao, come stai?'
             });
 
+            // Send the data to your bot
+            window.Telegram.WebApp.sendData(messageData);
         });
-        
+
         achievements.forEach(achievement => {
             const achievementElem = document.createElement('div');
             achievementElem.classList.add('achievement');
@@ -831,8 +831,8 @@
         checkAchievements();
 
         // Attendi che il documento sia pronto
-        
-            document.addEventListener('DOMContentLoaded', function () {
+
+        document.addEventListener('DOMContentLoaded', function () {
             // Assicurati che Telegram WebApp sia disponibile
             if (window.Telegram.WebApp) {
                 const user = window.Telegram.WebApp.initDataUnsafe.user;
@@ -863,7 +863,7 @@
                 alert('Telegram WebApp non è disponibile.');
             }
         });
-       
+
 
 
     </script>
