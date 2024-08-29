@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <title>CellCoin Faucet Deluxe - Web3 Gaming Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
@@ -530,6 +532,7 @@
     <canvas id="particles"></canvas>
     <div id="gameContainer">
         <h1>CellCoin Faucet Deluxe</h1>
+        <h2 id="username">Benvenuto, Estrai i tuoi CellCoin!</h2>
         <div id="status">
             <div class="status-item">Livello: <span id="levelDisplay">1</span></div>
             <div class="status-item">CellCoin: <span id="cellcoinDisplay">0</span> CC</div>
@@ -616,7 +619,7 @@
         const evolveSound = new Audio('350868__cabled_mess__coin_c_05.wav');
         const achievementSound = new Audio('350873__cabled_mess__coin_c_02.wav');
         const clickFrenzySound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
-
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
 
         achievements.forEach(achievement => {
             const achievementElem = document.createElement('div');
@@ -636,7 +639,7 @@
             evolveCostDisplay.textContent = evolutionCost;
         }
 
-
+        document.getElementById('username').textContent = user ? `Benvenuto, ${user.first_name}!` : 'Benvenuto, Estrai i tuoi CellCoin!';
 
         let soundEnabled = true;
 
