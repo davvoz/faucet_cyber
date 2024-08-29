@@ -623,10 +623,12 @@
         const achievementSound = new Audio('350873__cabled_mess__coin_c_02.wav');
         const clickFrenzySound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
         const user = window.Telegram.WebApp.initDataUnsafe.user;
+        const chatId = window.Telegram.WebApp.initDataUnsafe.chat?.id;
+
         document.getElementById('inviaMessaggio').addEventListener('click', function () {
             // Prepare the data to send to your bot
             const messageData = JSON.stringify({
-                chat_id: '1234567890',
+                chat_id: chatId,
                 text: 'Ciao, come stai?'
             });
 
