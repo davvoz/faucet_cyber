@@ -533,6 +533,7 @@
     <div id="gameContainer">
         <h1>CellCoin Faucet Deluxe</h1>
         <h2 id="username">Benvenuto, Estrai i tuoi CellCoin!</h2>
+        <button id="inviaMessaggio" class="btn">Invia Messaggio</button>
         <div id="status">
             <div class="status-item">Livello: <span id="levelDisplay">1</span></div>
             <div class="status-item">CellCoin: <span id="cellcoinDisplay">0</span> CC</div>
@@ -606,6 +607,7 @@
         const achievementDescription = document.getElementById('achievementDescription');
         const devModeToggle = document.getElementById('devModeToggle');
         const achievementsContainer = document.getElementById('achievements');
+        const inviaMessaggio = document.getElementById('inviaMessaggio');
 
         const achievements = [
             { id: 'firstMine', name: 'Prima Estrazione', description: 'Hai estratto il tuo primo CellCoin!', condition: () => clickCount >= 1 },
@@ -620,7 +622,18 @@
         const achievementSound = new Audio('350873__cabled_mess__coin_c_02.wav');
         const clickFrenzySound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
         const user = window.Telegram.WebApp.initDataUnsafe.user;
+        document.getElementById('inviaMessaggio').addEventListener('click', function () {
+            //inviamo un messaggio alla chat
+            window.Telegram.WebApp.sendAction({
+                action: 'openChat',
+                params: {
+                    chat_id: '1234567890',
+                    text: 'Ciao, come stai?'
+                }
+            });
 
+        });
+        
         achievements.forEach(achievement => {
             const achievementElem = document.createElement('div');
             achievementElem.classList.add('achievement');
