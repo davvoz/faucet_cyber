@@ -623,18 +623,23 @@
         const achievementSound = new Audio('350873__cabled_mess__coin_c_02.wav');
         const clickFrenzySound = new Audio('435623__theknave__large-coin-into-pile-of-coins-2.wav');
         const user = window.Telegram.WebApp.initDataUnsafe.user;
-
         document.getElementById('inviaMessaggio').addEventListener('click', function () {
             const chatId = window.Telegram.WebApp.initDataUnsafe.user.id;
-
-            // Prepara i dati da inviare al bot
             const messageData = {
                 chat_id: chatId,
                 text: `Ciao, ${window.Telegram.WebApp.initDataUnsafe.user.first_name}! Ecco i tuoi CellCoin: ${cellcoin.toFixed(1)} CC`
             };
 
-            // Invia i dati al bot
-            window.Telegram.WebApp.sendData(JSON.stringify(messageData));
+            console.log('Tentativo di invio dati:', messageData);
+
+            try {
+                window.Telegram.WebApp.sendData(JSON.stringify(messageData));
+                console.log('Dati inviati con successo');
+                window.Telegram.WebApp.showAlert('Dati inviati con successo! Controlla i log del bot.');
+            } catch (error) {
+                console.error('Errore nell\'invio dei dati:', error);
+                window.Telegram.WebApp.showAlert('Errore nell\'invio dei dati. Controlla la console.');
+            }
         });
 
         achievements.forEach(achievement => {
